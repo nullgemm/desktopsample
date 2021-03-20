@@ -1,0 +1,86 @@
+.POSIX:
+NAME = example_windows_software
+CMD = ../make/scripts/dll_copy.sh globox_windows_software_mingw.dll && wine ./example_windows_software
+CC = x86_64-w64-mingw32-gcc
+
+LDFLAGS+= -fno-stack-protector
+
+LDLIBS+= -lgdi32
+LDLIBS+= -ldwmapi
+LDLIBS+= -lshcore
+LDLIBS+= -mwindows
+
+CFLAGS+= -std=c99
+CFLAGS+= -pedantic
+CFLAGS+= -Wall
+CFLAGS+= -Wextra
+CFLAGS+= -Werror=vla
+CFLAGS+= -Werror
+CFLAGS+= -Wno-address-of-packed-member
+CFLAGS+= -Wno-unused-parameter
+CFLAGS+= -Wno-implicit-fallthrough
+CFLAGS+= -Wno-cast-function-type
+CFLAGS+= -Wno-incompatible-pointer-types
+CFLAGS+= -Ires/globox/include
+CFLAGS+= -Ires/willis/src
+CFLAGS+= -Ires/cursoryx/src
+CFLAGS+= -Ires/dpishit/src
+
+CFLAGS+= -DGLOBOX_PLATFORM_WINDOWS
+CFLAGS+= -DWILLIS_WINDOWS
+CFLAGS+= -DWILLIS_DEBUG
+CFLAGS+= -DCURSORYX_WINDOWS
+CFLAGS+= -DDPISHIT_WINDOWS
+CFLAGS+= -DUNICODE
+CFLAGS+= -D_UNICODE
+CFLAGS+= -DWINVER=0x0A00
+CFLAGS+= -D_WIN32_WINNT=0x0A00
+CFLAGS+= -DCINTERFACE
+CFLAGS+= -DCOBJMACROS
+CFLAGS+= -DGLOBOX_CONTEXT_SOFTWARE
+
+OBJ+= res/willis/src/willis.o
+OBJ+= res/willis/src/debug.o
+OBJ+= res/willis/src/windows.o
+OBJ+= res/cursoryx/src/windows.o
+OBJ+= res/dpishit/src/windows.o
+OBJ+= example/software.o
+
+OBJ_EXTRA+= res/globox/lib/globox/windows/globox_windows_software_mingw.a
+
+default: res/globox bin/$(NAME)
+
+bin/$(NAME): $(OBJ) $(OBJ_EXTRA)
+	mkdir -p $(@D)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+bin/eglproxy.dll: res/eglproxy
+	mkdir -p $(@D)
+	cp res/eglproxy/lib/mingw/eglproxy.dll $@
+
+res/eglproxy:
+	make/scripts/eglproxy_get.sh
+
+res/egl_headers:
+	make/scripts/egl_get.sh
+
+res/globox:
+	make/scripts/globox_get.sh
+
+run: bin/$(NAME)
+	cd bin && $(CMD)
+
+willis.o: res/willis/src/willis.c res/willis/src/willis.h \
+ res/willis/src/willis_events.h
+debug.o: res/willis/src/debug.c
+windows.o: res/willis/src/windows.c res/willis/src/willis.h \
+ res/willis/src/willis_events.h
+windows.o: res/cursoryx/src/windows.c res/cursoryx/src/cursoryx.h \
+ res/cursoryx/src/cursoryx_windows.h
+windows.o: res/dpishit/src/windows.c res/dpishit/src/dpishit.h \
+ res/dpishit/src/dpishit_info.h
+software.o: example/software.c globox.h globox_private_getters.h willis.h \
+ cursoryx.h dpishit.h
+
+clean:
+	make/scripts/clean.sh

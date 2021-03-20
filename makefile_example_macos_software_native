@@ -1,0 +1,81 @@
+.POSIX:
+NAME = example_macos_software_native
+CMD = ./example_macos_software_native
+OBJCOPY = /usr/local/Cellar/binutils/*/bin/objcopy
+CC = clang
+
+
+LDLIBS+= -framework
+LDLIBS+= AppKit
+
+CFLAGS+= -std=c99
+CFLAGS+= -pedantic
+CFLAGS+= -Wall
+CFLAGS+= -Wextra
+CFLAGS+= -Werror=vla
+CFLAGS+= -Werror
+CFLAGS+= -Wno-address-of-packed-member
+CFLAGS+= -Wno-unused-parameter
+CFLAGS+= -Ires/globox/include
+CFLAGS+= -Ires/willis/src
+CFLAGS+= -Ires/cursoryx/src
+CFLAGS+= -Ires/dpishit/src
+
+CFLAGS+= -DGLOBOX_PLATFORM_MACOS
+CFLAGS+= -DWILLIS_MACOS
+CFLAGS+= -DWILLIS_DEBUG
+CFLAGS+= -DCURSORYX_MACOS
+CFLAGS+= -DDPISHIT_MACOS
+CFLAGS+= -DGLOBOX_CONTEXT_SOFTWARE
+
+OBJ+= res/willis/src/willis.o
+OBJ+= res/willis/src/debug.o
+OBJ+= res/willis/src/macos.o
+OBJ+= res/cursoryx/src/macos.o
+OBJ+= res/dpishit/src/macos.o
+OBJ+= example/software.o
+
+OBJ_EXTRA+= res/globox/lib/globox/macos/globox_macos_software_native.a
+
+VALGRIND+= --show-error-list=yes
+VALGRIND+= --show-leak-kinds=all
+VALGRIND+= --track-origins=yes
+VALGRIND+= --leak-check=full
+VALGRIND+= --suppressions=../res/valgrind.supp
+
+default: res/globox bin/$(NAME).app
+
+bin/$(NAME).app: bin/$(NAME)
+	mv bin/$(NAME) $@
+
+bin/$(NAME): $(OBJ) $(OBJ_EXTRA)
+	mkdir -p $(@D)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+bin/libEGL.dylib: res/angle/libs
+	cp res/angle/libs/*.dylib bin/
+
+res/angle/libs:
+	mkdir -p bin
+	make/scripts/angle_dev_get.sh
+
+res/globox:
+	make/scripts/globox_get.sh
+
+run: bin/$(NAME)
+	cd bin && $(CMD)
+
+willis.o: res/willis/src/willis.c res/willis/src/willis.h \
+  res/willis/src/willis_events.h
+debug.o: res/willis/src/debug.c
+macos.o: res/willis/src/macos.c res/willis/src/willis.h \
+  res/willis/src/willis_events.h res/willis/src/willis_macos.h
+macos.o: res/cursoryx/src/macos.c res/cursoryx/src/cursoryx.h \
+  res/cursoryx/src/cursoryx_macos.h
+macos.o: res/dpishit/src/macos.c res/dpishit/src/dpishit.h \
+  res/dpishit/src/dpishit_info.h res/dpishit/src/dpishit_macos.h
+software.o: example/software.c globox.h globox_private_getters.h willis.h \
+  cursoryx.h dpishit.h
+
+clean:
+	make/scripts/clean.sh

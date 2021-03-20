@@ -1,0 +1,95 @@
+.POSIX:
+NAME = example_x11_software
+CMD = ./example_x11_software
+CC = gcc
+
+
+LDLIBS+= -lxcb-cursor
+LDLIBS+= -lxcb-randr
+LDLIBS+= -lxcb-xfixes
+LDLIBS+= -lxcb-xinput
+LDLIBS+= -lxcb-xkb
+LDLIBS+= -lxcb-xrm
+LDLIBS+= -lxcb
+LDLIBS+= -lxkbcommon-x11
+LDLIBS+= -lxkbcommon
+LDLIBS+= -lxcb-shm
+LDLIBS+= -lxcb-render
+
+CFLAGS+= -std=c99
+CFLAGS+= -pedantic
+CFLAGS+= -Wall
+CFLAGS+= -Wextra
+CFLAGS+= -Werror=vla
+CFLAGS+= -Werror
+CFLAGS+= -Wno-address-of-packed-member
+CFLAGS+= -Wno-unused-parameter
+CFLAGS+= -Ires/globox/include
+CFLAGS+= -Ires/willis/src
+CFLAGS+= -Ires/cursoryx/src
+CFLAGS+= -Ires/dpishit/src
+
+CFLAGS+= -DGLOBOX_PLATFORM_X11
+CFLAGS+= -DWILLIS_X11
+CFLAGS+= -DWILLIS_DEBUG
+CFLAGS+= -DCURSORYX_X11
+CFLAGS+= -DDPISHIT_X11
+CFLAGS+= -DGLOBOX_CONTEXT_SOFTWARE
+
+OBJ+= res/willis/src/willis.o
+OBJ+= res/willis/src/debug.o
+OBJ+= res/willis/src/x11.o
+OBJ+= res/willis/src/xkb.o
+OBJ+= res/cursoryx/src/x11.o
+OBJ+= res/dpishit/src/x11.o
+OBJ+= res/dpishit/src/nix.o
+OBJ+= example/software.o
+
+OBJ_EXTRA+= res/globox/lib/globox/x11/globox_x11_software.a
+
+VALGRIND+= --show-error-list=yes
+VALGRIND+= --show-leak-kinds=all
+VALGRIND+= --track-origins=yes
+VALGRIND+= --leak-check=full
+VALGRIND+= --suppressions=../res/valgrind.supp
+
+default: res/globox bin/$(NAME)
+
+bin/$(NAME): $(OBJ) $(OBJ_EXTRA)
+	mkdir -p $(@D)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+res/globox:
+	make/scripts/globox_get.sh
+
+res/wayland_headers:
+	make/scripts/wayland_get.sh
+
+leak: bin/$(NAME)
+	cd bin && valgrind $(VALGRIND) 2> ../valgrind.log $(CMD)
+	less valgrind.log
+
+run: bin/$(NAME)
+	cd bin && $(CMD)
+
+willis.o: res/willis/src/willis.c res/willis/src/willis.h \
+ res/willis/src/willis_events.h
+debug.o: res/willis/src/debug.c
+x11.o: res/willis/src/x11.c res/willis/src/willis.h \
+ res/willis/src/willis_events.h res/willis/src/willis_x11.h \
+ res/willis/src/willis_xkb.h res/willis/src/xkb.h
+xkb.o: res/willis/src/xkb.c res/willis/src/willis.h \
+ res/willis/src/willis_events.h res/willis/src/willis_xkb.h \
+ res/willis/src/xkb.h
+x11.o: res/cursoryx/src/x11.c res/cursoryx/src/cursoryx.h \
+ res/cursoryx/src/cursoryx_x11.h
+x11.o: res/dpishit/src/x11.c res/dpishit/src/dpishit.h \
+ res/dpishit/src/dpishit_info.h res/dpishit/src/dpishit_x11.h \
+ res/dpishit/src/nix.h
+nix.o: res/dpishit/src/nix.c res/dpishit/src/dpishit.h \
+ res/dpishit/src/dpishit_info.h res/dpishit/src/nix.h
+software.o: example/software.c globox.h globox_private_getters.h willis.h \
+ cursoryx.h dpishit.h
+
+clean:
+	make/scripts/clean.sh

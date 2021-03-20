@@ -1,0 +1,9 @@
+[submodule "res/willis"]
+	path = res/willis
+	url = https://git.nullgemm.fr/nullgemm/willis.git
+[submodule "res/cursoryx"]
+	path = res/cursoryx
+	url = https://git.nullgemm.fr/nullgemm/cursoryx.git
+[submodule "res/dpishit"]
+	path = res/dpishit
+	url = https://git.nullgemm.fr/nullgemm/dpishit.git
