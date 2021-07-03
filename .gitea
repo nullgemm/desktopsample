@@ -7,3 +7,6 @@
 [submodule "res/dpishit"]
 	path = res/dpishit
 	url = https://git.nullgemm.fr/nullgemm/dpishit.git
+[submodule "res/razorbeard"]
+	path = res/razorbeard
+	url = https://git.nullgemm.fr/nullgemm/razorbeard.git
