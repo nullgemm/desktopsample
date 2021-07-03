@@ -1,6 +1,6 @@
 .POSIX:
 NAME = example_windows_egl
-CMD = ../make/scripts/dll_copy.sh globox_windows_egl_mingw.dll && wine ./example_windows_egl
+CMD = ../make/scripts/dll_copy.sh globox_windows_egl_mingw.dll && wine ./example_windows_egl.exe
 CC = x86_64-w64-mingw32-gcc
 
 LDFLAGS+= -fno-stack-protector

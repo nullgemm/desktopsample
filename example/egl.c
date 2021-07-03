@@ -403,23 +403,23 @@ int main(void)
 	bool dpishit_logic;
 	bool dpishit_scale;
 
+	globox_platform_prepoll(&globox);
+
+	if (globox_error_catch(&globox))
+	{
+		globox_context_egl_free(&globox);
+		globox_platform_free(&globox);
+		globox_close(&globox);
+		return 1;
+	}
+
 	while (globox_get_closed(&globox) == false)
 	{
 		cursoryx_set(
 			&cursoryx,
 			CURSORYX_HAND);
 
-		globox_platform_prepoll(&globox);
-
-		if (globox_error_catch(&globox))
-		{
-			globox_context_egl_free(&globox);
-			globox_platform_free(&globox);
-			globox_close(&globox);
-			return 1;
-		}
-
-		globox_platform_events_wait(&globox);
+		globox_platform_events_poll(&globox);
 
 		if (globox_error_catch(&globox))
 		{
