@@ -25,6 +25,9 @@ CFLAGS+= -Ires/globox/include
 CFLAGS+= -Ires/willis/src
 CFLAGS+= -Ires/cursoryx/src
 CFLAGS+= -Ires/dpishit/src
+CFLAGS+= -Ires/razorbeard/src
+CFLAGS+= -Ires/razorbeard/src/default_widgets
+CFLAGS+= -Iexample
 
 CFLAGS+= -DGLOBOX_PLATFORM_WINDOWS
 CFLAGS+= -DWILLIS_WINDOWS
@@ -44,6 +47,11 @@ OBJ+= res/willis/src/debug.o
 OBJ+= res/willis/src/windows.o
 OBJ+= res/cursoryx/src/windows.o
 OBJ+= res/dpishit/src/windows.o
+OBJ+= res/razorbeard/src/razorbeard.o
+OBJ+= res/razorbeard/src/default_widgets/razorbeard_math.o
+OBJ+= res/razorbeard/src/default_widgets/razorbeard_helpers.o
+OBJ+= res/razorbeard/src/default_widgets/razorbeard_default_widgets.o
+OBJ+= example/helpers.o
 OBJ+= example/software.o
 
 OBJ_EXTRA+= res/globox/lib/globox/windows/globox_windows_software_mingw.a
@@ -79,8 +87,25 @@ windows.o: res/cursoryx/src/windows.c res/cursoryx/src/cursoryx.h \
  res/cursoryx/src/cursoryx_windows.h
 windows.o: res/dpishit/src/windows.c res/dpishit/src/dpishit.h \
  res/dpishit/src/dpishit_info.h
+razorbeard.o: res/razorbeard/src/razorbeard.c \
+ res/razorbeard/src/razorbeard.h
+razorbeard_math.o: res/razorbeard/src/default_widgets/razorbeard_math.c \
+ res/razorbeard/src/default_widgets/razorbeard_math.h
+razorbeard_helpers.o: \
+ res/razorbeard/src/default_widgets/razorbeard_helpers.c \
+ res/razorbeard/src/default_widgets/razorbeard_helpers.h razorbeard.h \
+ res/razorbeard/src/default_widgets/razorbeard_math.h
+razorbeard_default_widgets.o: \
+ res/razorbeard/src/default_widgets/razorbeard_default_widgets.c \
+ razorbeard.h res/razorbeard/src/default_widgets/razorbeard_helpers.h \
+ res/razorbeard/src/default_widgets/razorbeard_math.h \
+ res/razorbeard/src/default_widgets/razorbeard_default_widgets.h \
+ razorbeard_events.h
+helpers.o: example/helpers.c example/helpers.h razorbeard.h \
+ razorbeard_default_widgets.h
 software.o: example/software.c globox.h globox_private_getters.h willis.h \
- cursoryx.h dpishit.h
+ cursoryx.h dpishit.h example/helpers.h razorbeard.h \
+ razorbeard_default_widgets.h
 
 clean:
 	make/scripts/clean.sh

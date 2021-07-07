@@ -19,11 +19,13 @@ LDLIBS+= eglproxy.lib
 LDLIBS+= opengl32.lib
 LDLIBS+= globox_windows_egl_msvc.lib
 
-CFLAGS+= -Zc:inline
 CFLAGS+= -Ires/globox/include
 CFLAGS+= -Ires/willis/src
 CFLAGS+= -Ires/cursoryx/src
 CFLAGS+= -Ires/dpishit/src
+CFLAGS+= -Ires/razorbeard/src
+CFLAGS+= -Ires/razorbeard/src/default_widgets
+CFLAGS+= -Iexample
 CFLAGS+= -I"/c/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/ucrt"
 CFLAGS+= -I"/c/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um"
 CFLAGS+= -I"/c/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/shared"
@@ -48,6 +50,11 @@ OBJ+= res/willis/src/debug.obj
 OBJ+= res/willis/src/windows.obj
 OBJ+= res/cursoryx/src/windows.obj
 OBJ+= res/dpishit/src/windows.obj
+OBJ+= res/razorbeard/src/razorbeard.obj
+OBJ+= res/razorbeard/src/default_widgets/razorbeard_math.obj
+OBJ+= res/razorbeard/src/default_widgets/razorbeard_helpers.obj
+OBJ+= res/razorbeard/src/default_widgets/razorbeard_default_widgets.obj
+OBJ+= example/helpers.obj
 OBJ+= example/egl.obj
 
 
@@ -96,6 +103,22 @@ windows.o: res/cursoryx/src/windows.c res/cursoryx/src/cursoryx.h \
  res/cursoryx/src/cursoryx_windows.h
 windows.o: res/dpishit/src/windows.c res/dpishit/src/dpishit.h \
  res/dpishit/src/dpishit_info.h
+razorbeard.o: res/razorbeard/src/razorbeard.c \
+ res/razorbeard/src/razorbeard.h
+razorbeard_math.o: res/razorbeard/src/default_widgets/razorbeard_math.c \
+ res/razorbeard/src/default_widgets/razorbeard_math.h
+razorbeard_helpers.o: \
+ res/razorbeard/src/default_widgets/razorbeard_helpers.c \
+ res/razorbeard/src/default_widgets/razorbeard_helpers.h razorbeard.h \
+ res/razorbeard/src/default_widgets/razorbeard_math.h
+razorbeard_default_widgets.o: \
+ res/razorbeard/src/default_widgets/razorbeard_default_widgets.c \
+ razorbeard.h res/razorbeard/src/default_widgets/razorbeard_helpers.h \
+ res/razorbeard/src/default_widgets/razorbeard_math.h \
+ res/razorbeard/src/default_widgets/razorbeard_default_widgets.h \
+ razorbeard_events.h
+helpers.o: example/helpers.c example/helpers.h razorbeard.h \
+ razorbeard_default_widgets.h
 egl.o: example/egl.c globox.h globox_private_getters.h willis.h \
  cursoryx.h dpishit.h
 
