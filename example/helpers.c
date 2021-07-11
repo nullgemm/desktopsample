@@ -6,6 +6,21 @@
 #define PADDING_X 12
 #define PADDING_Y 12
 
+void layout_demo_frame(
+	struct rzb* rzb,
+	struct rzb_widget* widget)
+{
+	widget->x = 0;
+
+	widget->y = 0;
+
+	widget->width =
+		rzb->argb_width;
+
+	widget->height =
+		rzb->argb_height;
+}
+
 void layout_demo_handles(
 	struct rzb* rzb,
 	struct rzb_widget* widget)
@@ -50,10 +65,24 @@ void layout_demo_tabs(
 	struct rzb* rzb,
 	struct rzb_widget* widget)
 {
-	widget->x = 2;
-	widget->y = 2;
-	widget->width = rzb->argb_width - 4;
-	widget->height = rzb->argb_height - 4;
+	struct rzb_widget_tabs* data = widget->data_widget;
+	struct rzb_default_widgets_context* context = data->context;
+
+	widget->x =
+		context->sizes_current->frame_border_size;
+
+	widget->y =
+		widget->parent->y
+		+ context->sizes_current->frame_default_height;
+
+	widget->width =
+		rzb->argb_width
+		- 2 * context->sizes_current->frame_border_size;
+
+	widget->height =
+		rzb->argb_height
+		- context->sizes_current->frame_default_height
+		- context->sizes_current->frame_border_size;
 }
 
 void layout_demo_popup(

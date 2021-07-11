@@ -3,6 +3,10 @@
 
 #include "razorbeard.h"
 
+void layout_demo_frame(
+	struct rzb* rzb,
+	struct rzb_widget* widget);
+
 void layout_demo_handles(
 	struct rzb* rzb,
 	struct rzb_widget* widget);

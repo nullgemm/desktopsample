@@ -17,6 +17,112 @@ struct event_data
 	bool* event_post;
 };
 
+enum rzb_default_widgets_event_state state_table[] =
+{
+	[WILLIS_STATE_NONE] = RZB_STATE_NONE,
+	[WILLIS_STATE_PRESS] = RZB_STATE_PRESS,
+	[WILLIS_STATE_RELEASE] = RZB_STATE_RELEASE,
+};
+
+enum rzb_default_widgets_events event_table[] =
+{
+	[WILLIS_NONE] = RZB_NONE,
+
+	[WILLIS_MOUSE_CLICK_LEFT] = RZB_MOUSE_CLICK_LEFT,
+	[WILLIS_MOUSE_CLICK_RIGHT] = RZB_MOUSE_CLICK_RIGHT,
+	[WILLIS_MOUSE_CLICK_MIDDLE] = RZB_MOUSE_CLICK_MIDDLE,
+	[WILLIS_MOUSE_WHEEL_UP] = RZB_MOUSE_WHEEL_UP,
+	[WILLIS_MOUSE_WHEEL_DOWN] = RZB_MOUSE_WHEEL_DOWN,
+	[WILLIS_MOUSE_MOTION] = RZB_MOUSE_MOTION,
+
+	[WILLIS_KEY_ESCAPE] = RZB_KEY_ESCAPE,
+	[WILLIS_KEY_BACKSPACE] = RZB_KEY_BACKSPACE,
+	[WILLIS_KEY_TAB] = RZB_KEY_TAB,
+	[WILLIS_KEY_ENTER] = RZB_KEY_ENTER,
+	[WILLIS_KEY_SHIFT_LEFT] = RZB_KEY_SHIFT_LEFT,
+	[WILLIS_KEY_SHIFT_RIGHT] = RZB_KEY_SHIFT_RIGHT,
+	[WILLIS_KEY_CTRL_LEFT] = RZB_KEY_CTRL_LEFT,
+	[WILLIS_KEY_CTRL_RIGHT] = RZB_KEY_CTRL_RIGHT,
+	[WILLIS_KEY_DELETE] = RZB_KEY_DELETE,
+	[WILLIS_KEY_HOME] = RZB_KEY_HOME,
+	[WILLIS_KEY_END] = RZB_KEY_END,
+	[WILLIS_KEY_PAGE_UP] = RZB_KEY_PAGE_UP,
+	[WILLIS_KEY_PAGE_DOWN] = RZB_KEY_PAGE_DOWN,
+	[WILLIS_KEY_UP] = RZB_KEY_UP,
+	[WILLIS_KEY_DOWN] = RZB_KEY_DOWN,
+	[WILLIS_KEY_LEFT] = RZB_KEY_LEFT,
+	[WILLIS_KEY_RIGHT] = RZB_KEY_RIGHT,
+};
+
+void callback_interactive(void* data, enum rzb_widget_frame_status status)
+{
+	struct globox* globox = data;
+
+	switch (status)
+	{
+		case RZB_WIDGET_FRAME_MOVE:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_MOVE);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_E:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_E);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_NE:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_NE);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_N:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_N);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_NW:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_NW);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_W:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_W);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_SW:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_SW);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_S:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_S);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_SE:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_SE);
+			break;
+		}
+		default:
+		{
+			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_STOP);
+			break;
+		}
+	}
+}
+
+#if defined(WILLIS_WAYLAND)
+void callback_serial(
+	void* data,
+	uint32_t serial)
+{
+	struct globox* globox = data;
+	globox_wayland_save_serial(globox, serial);
+}
+#endif
+
 void render(
 	struct globox* globox,
 	struct rzb* rzb,
@@ -41,11 +147,6 @@ void render(
 		rzb->argb = argb;
 		rzb->argb_width = width;
 		rzb->argb_height = height;
-
-		for (uint32_t i = 0; i < height * width; ++i)
-		{
-			argb[i] = 0xff191919;
-		}
 
 		rzb_render_all(rzb);
 
@@ -81,13 +182,18 @@ void event(
 		willis_mouse_ungrab(willis);
 	}
 
+	struct rzb_default_widgets_events_data rzb_events_data = {0};
 	char* utf8_string = willis_get_utf8_string(willis);
+	struct event_data* event_data = data;
 
 	if (utf8_string != NULL)
 	{
 		printf(
 			"%s\n",
 			utf8_string);
+
+		rzb_events_data.typed_string = utf8_string;
+		//rzb_send_events_data(event_data->rzb, &rzb_events_data);
 	}
 
 	if (event_code == WILLIS_MOUSE_MOTION)
@@ -105,17 +211,21 @@ void event(
 				"pos: %i %i\n",
 				willis_get_mouse_x(willis),
 				willis_get_mouse_y(willis));
+
+			rzb_events_data.mouse_pos_x = willis_get_mouse_x(willis);
+			rzb_events_data.mouse_pos_y = willis_get_mouse_y(willis);
+			rzb_send_events_data(event_data->rzb, &rzb_events_data);
 		}
 	}
 
 	if ((event_code == WILLIS_KEY_UP)
 		|| (event_code == WILLIS_KEY_DOWN)
 		|| (event_code == WILLIS_KEY_LEFT)
-		|| (event_code == WILLIS_KEY_RIGHT))
+		|| (event_code == WILLIS_KEY_RIGHT)
+		|| (event_code == WILLIS_MOUSE_MOTION)
+		|| (event_code == WILLIS_MOUSE_CLICK_LEFT))
 	{
-		struct event_data* event_data = data;
-
-		rzb_send_event(event_data->rzb, event_code, event_state);
+		rzb_send_event(event_data->rzb, event_table[event_code], state_table[event_state]);
 		*(event_data->event_post) = true;
 	}
 
@@ -152,7 +262,7 @@ int main(void)
 		return 1;
 	}
 
-	globox_platform_init(&globox, true, false, true);
+	globox_platform_init(&globox, true, true, true);
 
 	if (globox_error_catch(&globox))
 	{
@@ -232,6 +342,7 @@ int main(void)
 	globox_platform_commit(&globox);
 
 	// widgets
+	struct rzb_widget* widget_frame;
 	struct rzb_widget* widget_handles;
 	//struct rzb_widget* widget_pager;
 	struct rzb_widget* widget_tabs;
@@ -254,9 +365,13 @@ int main(void)
 
 	rzb_init(&rzb, &rzb_display_info);
 
-	rzb_default_widgets_init(&kit, NULL);
+	rzb_default_widgets_init(&rzb, &kit);
 
 	char* tabs[6] = {"first", "second", "third", "fourth", "fifth", "sixth"};
+
+	widget_frame =
+		rzb_alloc_widget_frame(
+			&rzb, layout_demo_frame, &kit, "desktop sample", callback_interactive, &globox);
 
 	widget_handles =
 		rzb_alloc_widget_handles(
@@ -340,8 +455,9 @@ int main(void)
 		rzb_alloc_widget_progressbar(
 			&rzb, layout_demo_progressbar, &kit, false, 66);
 
-	rzb_update_root_widget(&rzb, widget_tabs);
+	rzb_update_root_widget(&rzb, widget_frame);
 
+	rzb_make_child(widget_tabs, widget_frame);
 	rzb_make_child(widget_handles, widget_tabs);
 	rzb_make_child(widget_button, widget_handles);
 	rzb_make_child(widget_button_b, widget_handles);
@@ -382,6 +498,10 @@ int main(void)
 			globox_get_wayland_pointer_manager(&globox),
 		.wl_pointer_constraints =
 			globox_get_wayland_pointer_constraints(&globox),
+		.callback_serial =
+			callback_serial,
+		.callback_serial_data =
+			&globox,
 	};
 
 	willis_backend_link = &willis_data;
