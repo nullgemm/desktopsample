@@ -14,6 +14,7 @@
 struct event_data
 {
 	struct rzb* rzb;
+	struct globox* globox;
 	bool* event_post;
 };
 
@@ -167,6 +168,20 @@ void event(
 	enum willis_event_state event_state,
 	void* data)
 {
+	struct rzb_default_widgets_events_data rzb_events_data = {0};
+	char* utf8_string = willis_get_utf8_string(willis);
+	struct event_data* event_data = data;
+
+#if defined(WILLIS_WAYLAND)
+	// wayland dumbness workaround
+	if ((event_code == WILLIS_MOUSE_MOTION)
+		&& (globox_get_interactive_mode(event_data->globox) != GLOBOX_INTERACTIVE_STOP))
+	{
+		event_code = WILLIS_MOUSE_CLICK_LEFT;
+		event_state = WILLIS_STATE_RELEASE;
+	}
+#endif
+
 	printf(
 		"%s\n%s\n",
 		willis_event_code_names[event_code],
@@ -183,10 +198,6 @@ void event(
 	{
 		willis_mouse_ungrab(willis);
 	}
-
-	struct rzb_default_widgets_events_data rzb_events_data = {0};
-	char* utf8_string = willis_get_utf8_string(willis);
-	struct event_data* event_data = data;
 
 	if (utf8_string != NULL)
 	{
@@ -516,6 +527,7 @@ int main(void)
 	struct event_data event_data =
 	{
 		.rzb = &rzb,
+		.globox = &globox,
 		.event_post = &event_post,
 	};
 
