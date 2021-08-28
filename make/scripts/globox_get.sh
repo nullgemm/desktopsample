@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 cd ../..
 
 # download target eglproxy release
-version="v0.2.11"
+version="v0.2.13"
 
 curl -L "https://github.com/nullgemm/globox/releases/download/$version/globox_bin_$version.zip" -o \
 res/globox.zip

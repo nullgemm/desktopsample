@@ -2,6 +2,24 @@
 
 #include "razorbeard.h"
 #include "razorbeard_default_widgets.h"
+#include "button/razorbeard_widget_button.h"
+#include "checkbox/razorbeard_widget_checkbox.h"
+#include "dropmenu/razorbeard_widget_dropmenu.h"
+#include "frame/razorbeard_widget_frame.h"
+#include "handles/razorbeard_widget_handles.h"
+#include "image/razorbeard_widget_image.h"
+#include "numberbox/razorbeard_widget_numberbox.h"
+#include "pager/razorbeard_widget_pager.h"
+#include "popup/razorbeard_widget_popup.h"
+#include "progressbar/razorbeard_widget_progressbar.h"
+#include "radiobutton/razorbeard_widget_radiobutton.h"
+#include "scrollbar/razorbeard_widget_scrollbar.h"
+#include "separator/razorbeard_widget_separator.h"
+#include "slider/razorbeard_widget_slider.h"
+#include "tabs/razorbeard_widget_tabs.h"
+#include "text/razorbeard_widget_text.h"
+#include "textarea/razorbeard_widget_textarea.h"
+#include "textbox/razorbeard_widget_textbox.h"
 
 #define PADDING_X 12
 #define PADDING_Y 12
@@ -68,21 +86,36 @@ void layout_demo_tabs(
 	struct rzb_widget_tabs* data = widget->data_widget;
 	struct rzb_default_widgets_context* context = data->context;
 
-	widget->x =
-		context->sizes_current->frame_border_size;
+	if (widget->parent != NULL)
+	{
+		widget->x =
+			context->sizes_current->frame_border_size;
 
-	widget->y =
-		widget->parent->y
-		+ context->sizes_current->frame_default_height;
+		widget->y =
+			widget->parent->y
+			+ context->sizes_current->frame_default_height;
 
-	widget->width =
-		rzb->argb_width
-		- 2 * context->sizes_current->frame_border_size;
+		widget->width =
+			rzb->argb_width
+			- 2 * context->sizes_current->frame_border_size;
 
-	widget->height =
-		rzb->argb_height
-		- context->sizes_current->frame_default_height
-		- context->sizes_current->frame_border_size;
+		widget->height =
+			rzb->argb_height
+			- context->sizes_current->frame_default_height
+			- context->sizes_current->frame_border_size;
+	}
+	else
+	{
+		widget->x = 0;
+
+		widget->y = 0;
+
+		widget->width =
+			rzb->argb_width;
+
+		widget->height =
+			rzb->argb_height;
+	}
 }
 
 void layout_demo_popup(

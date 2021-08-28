@@ -8,7 +8,6 @@ LDLIBS+= -lwayland-client
 LDLIBS+= -lwayland-cursor
 LDLIBS+= -lxkbcommon
 LDLIBS+= -lrt
-LDLIBS+= -lpthread
 
 CFLAGS+= -std=c99
 CFLAGS+= -pedantic
@@ -45,6 +44,24 @@ OBJ+= res/razorbeard/src/razorbeard.o
 OBJ+= res/razorbeard/src/default_widgets/razorbeard_math.o
 OBJ+= res/razorbeard/src/default_widgets/razorbeard_helpers.o
 OBJ+= res/razorbeard/src/default_widgets/razorbeard_default_widgets.o
+OBJ+= res/razorbeard/src/default_widgets/button/razorbeard_widget_button.o
+OBJ+= res/razorbeard/src/default_widgets/checkbox/razorbeard_widget_checkbox.o
+OBJ+= res/razorbeard/src/default_widgets/dropmenu/razorbeard_widget_dropmenu.o
+OBJ+= res/razorbeard/src/default_widgets/frame/razorbeard_widget_frame.o
+OBJ+= res/razorbeard/src/default_widgets/handles/razorbeard_widget_handles.o
+OBJ+= res/razorbeard/src/default_widgets/image/razorbeard_widget_image.o
+OBJ+= res/razorbeard/src/default_widgets/numberbox/razorbeard_widget_numberbox.o
+OBJ+= res/razorbeard/src/default_widgets/pager/razorbeard_widget_pager.o
+OBJ+= res/razorbeard/src/default_widgets/popup/razorbeard_widget_popup.o
+OBJ+= res/razorbeard/src/default_widgets/progressbar/razorbeard_widget_progressbar.o
+OBJ+= res/razorbeard/src/default_widgets/radiobutton/razorbeard_widget_radiobutton.o
+OBJ+= res/razorbeard/src/default_widgets/scrollbar/razorbeard_widget_scrollbar.o
+OBJ+= res/razorbeard/src/default_widgets/separator/razorbeard_widget_separator.o
+OBJ+= res/razorbeard/src/default_widgets/slider/razorbeard_widget_slider.o
+OBJ+= res/razorbeard/src/default_widgets/tabs/razorbeard_widget_tabs.o
+OBJ+= res/razorbeard/src/default_widgets/text/razorbeard_widget_text.o
+OBJ+= res/razorbeard/src/default_widgets/textarea/razorbeard_widget_textarea.o
+OBJ+= res/razorbeard/src/default_widgets/textbox/razorbeard_widget_textbox.o
 OBJ+= example/helpers.o
 OBJ+= example/software.o
 
@@ -105,11 +122,125 @@ razorbeard_default_widgets.o: \
  razorbeard.h res/razorbeard/src/default_widgets/razorbeard_helpers.h \
  res/razorbeard/src/default_widgets/razorbeard_math.h \
  res/razorbeard/src/default_widgets/razorbeard_default_widgets.h
+razorbeard_widget_button.o: \
+ res/razorbeard/src/default_widgets/button/razorbeard_widget_button.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/button/razorbeard_widget_button.h
+razorbeard_widget_checkbox.o: \
+ res/razorbeard/src/default_widgets/checkbox/razorbeard_widget_checkbox.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/checkbox/razorbeard_widget_checkbox.h
+razorbeard_widget_dropmenu.o: \
+ res/razorbeard/src/default_widgets/dropmenu/razorbeard_widget_dropmenu.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/dropmenu/razorbeard_widget_dropmenu.h
+razorbeard_widget_frame.o: \
+ res/razorbeard/src/default_widgets/frame/razorbeard_widget_frame.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/frame/razorbeard_widget_frame.h
+razorbeard_widget_handles.o: \
+ res/razorbeard/src/default_widgets/handles/razorbeard_widget_handles.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/handles/razorbeard_widget_handles.h
+razorbeard_widget_image.o: \
+ res/razorbeard/src/default_widgets/image/razorbeard_widget_image.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/image/razorbeard_widget_image.h
+razorbeard_widget_numberbox.o: \
+ res/razorbeard/src/default_widgets/numberbox/razorbeard_widget_numberbox.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/numberbox/razorbeard_widget_numberbox.h
+razorbeard_widget_pager.o: \
+ res/razorbeard/src/default_widgets/pager/razorbeard_widget_pager.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/pager/razorbeard_widget_pager.h
+razorbeard_widget_popup.o: \
+ res/razorbeard/src/default_widgets/popup/razorbeard_widget_popup.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/popup/razorbeard_widget_popup.h
+razorbeard_widget_progressbar.o: \
+ res/razorbeard/src/default_widgets/progressbar/razorbeard_widget_progressbar.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/progressbar/razorbeard_widget_progressbar.h
+razorbeard_widget_radiobutton.o: \
+ res/razorbeard/src/default_widgets/radiobutton/razorbeard_widget_radiobutton.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/radiobutton/razorbeard_widget_radiobutton.h
+razorbeard_widget_scrollbar.o: \
+ res/razorbeard/src/default_widgets/scrollbar/razorbeard_widget_scrollbar.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/scrollbar/razorbeard_widget_scrollbar.h
+razorbeard_widget_separator.o: \
+ res/razorbeard/src/default_widgets/separator/razorbeard_widget_separator.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/separator/razorbeard_widget_separator.h
+razorbeard_widget_slider.o: \
+ res/razorbeard/src/default_widgets/slider/razorbeard_widget_slider.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/slider/razorbeard_widget_slider.h
+razorbeard_widget_tabs.o: \
+ res/razorbeard/src/default_widgets/tabs/razorbeard_widget_tabs.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/tabs/razorbeard_widget_tabs.h
+razorbeard_widget_text.o: \
+ res/razorbeard/src/default_widgets/text/razorbeard_widget_text.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/text/razorbeard_widget_text.h
+razorbeard_widget_textarea.o: \
+ res/razorbeard/src/default_widgets/textarea/razorbeard_widget_textarea.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/textarea/razorbeard_widget_textarea.h
+razorbeard_widget_textbox.o: \
+ res/razorbeard/src/default_widgets/textbox/razorbeard_widget_textbox.c \
+ razorbeard.h razorbeard_helpers.h razorbeard_math.h \
+ razorbeard_default_widgets.h \
+ res/razorbeard/src/default_widgets/textbox/razorbeard_widget_textbox.h
 helpers.o: example/helpers.c example/helpers.h razorbeard.h \
- razorbeard_default_widgets.h
+ razorbeard_default_widgets.h button/razorbeard_widget_button.h \
+ checkbox/razorbeard_widget_checkbox.h \
+ dropmenu/razorbeard_widget_dropmenu.h frame/razorbeard_widget_frame.h \
+ handles/razorbeard_widget_handles.h image/razorbeard_widget_image.h \
+ numberbox/razorbeard_widget_numberbox.h pager/razorbeard_widget_pager.h \
+ popup/razorbeard_widget_popup.h \
+ progressbar/razorbeard_widget_progressbar.h \
+ radiobutton/razorbeard_widget_radiobutton.h \
+ scrollbar/razorbeard_widget_scrollbar.h \
+ separator/razorbeard_widget_separator.h \
+ slider/razorbeard_widget_slider.h tabs/razorbeard_widget_tabs.h \
+ text/razorbeard_widget_text.h textarea/razorbeard_widget_textarea.h \
+ textbox/razorbeard_widget_textbox.h
 software.o: example/software.c globox.h globox_private_getters.h willis.h \
  cursoryx.h dpishit.h example/helpers.h razorbeard.h \
- razorbeard_default_widgets.h
+ razorbeard_default_widgets.h button/razorbeard_widget_button.h \
+ checkbox/razorbeard_widget_checkbox.h \
+ dropmenu/razorbeard_widget_dropmenu.h frame/razorbeard_widget_frame.h \
+ handles/razorbeard_widget_handles.h image/razorbeard_widget_image.h \
+ numberbox/razorbeard_widget_numberbox.h pager/razorbeard_widget_pager.h \
+ popup/razorbeard_widget_popup.h \
+ progressbar/razorbeard_widget_progressbar.h \
+ radiobutton/razorbeard_widget_radiobutton.h \
+ scrollbar/razorbeard_widget_scrollbar.h \
+ separator/razorbeard_widget_separator.h \
+ slider/razorbeard_widget_slider.h tabs/razorbeard_widget_tabs.h \
+ text/razorbeard_widget_text.h textarea/razorbeard_widget_textarea.h \
+ textbox/razorbeard_widget_textbox.h
 
 clean:
 	make/scripts/clean.sh

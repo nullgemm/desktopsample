@@ -7,6 +7,24 @@
 #include "helpers.h"
 #include "razorbeard.h"
 #include "razorbeard_default_widgets.h"
+#include "button/razorbeard_widget_button.h"
+#include "checkbox/razorbeard_widget_checkbox.h"
+#include "dropmenu/razorbeard_widget_dropmenu.h"
+#include "frame/razorbeard_widget_frame.h"
+#include "handles/razorbeard_widget_handles.h"
+#include "image/razorbeard_widget_image.h"
+#include "numberbox/razorbeard_widget_numberbox.h"
+#include "pager/razorbeard_widget_pager.h"
+#include "popup/razorbeard_widget_popup.h"
+#include "progressbar/razorbeard_widget_progressbar.h"
+#include "radiobutton/razorbeard_widget_radiobutton.h"
+#include "scrollbar/razorbeard_widget_scrollbar.h"
+#include "separator/razorbeard_widget_separator.h"
+#include "slider/razorbeard_widget_slider.h"
+#include "tabs/razorbeard_widget_tabs.h"
+#include "text/razorbeard_widget_text.h"
+#include "textarea/razorbeard_widget_textarea.h"
+#include "textbox/razorbeard_widget_textbox.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -55,9 +73,111 @@ enum rzb_default_widgets_events event_table[] =
 	[WILLIS_KEY_RIGHT] = RZB_KEY_RIGHT,
 };
 
-void callback_interactive(void* data, enum rzb_widget_frame_status status)
+struct frame_data
 {
-	struct globox* globox = data;
+	struct globox* globox;
+	struct cursoryx* cursoryx;
+};
+
+void frame_on_area(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_frame* frame = widget->data_widget;
+	enum rzb_widget_frame_status status = frame->status;
+	struct frame_data* data = frame->button_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	switch (status)
+	{
+		case RZB_WIDGET_FRAME_MINIMIZE:
+		case RZB_WIDGET_FRAME_MAXIMIZE:
+		case RZB_WIDGET_FRAME_CLOSE:
+		case RZB_WIDGET_FRAME_MOVE:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_HAND);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_E:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_W_E);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_NE:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_NE_SW);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_N:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_N_S);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_NW:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_NW_SE);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_W:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_W_E);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_SW:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_NE_SW);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_S:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_N_S);
+			break;
+		}
+		case RZB_WIDGET_FRAME_SIZE_SE:
+		{
+			cursoryx_set(
+				cursoryx,
+				CURSORYX_SIZE_NW_SE);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+}
+
+void frame_off_area(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_frame* frame = widget->data_widget;
+	struct frame_data* data = frame->button_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	cursoryx_set(
+		cursoryx,
+		CURSORYX_ARROW);
+}
+
+void frame_pressed(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_frame* frame = widget->data_widget;
+	enum rzb_widget_frame_status status = frame->status;
+	struct frame_data* data = frame->button_data;
+	struct globox* globox = data->globox;
 
 	switch (status)
 	{
@@ -108,10 +228,68 @@ void callback_interactive(void* data, enum rzb_widget_frame_status status)
 		}
 		default:
 		{
-			globox_platform_interactive_mode(globox, GLOBOX_INTERACTIVE_STOP);
 			break;
 		}
 	}
+}
+
+void frame_released(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_frame* frame = widget->data_widget;
+	enum rzb_widget_frame_status status = frame->status;
+	struct frame_data* data = frame->button_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+	struct globox* globox = data->globox;
+
+	switch (status)
+	{
+		case RZB_WIDGET_FRAME_MINIMIZE:
+		{
+			globox_platform_set_state(
+				globox,
+				GLOBOX_STATE_MINIMIZED); 
+
+			break;
+		}
+		case RZB_WIDGET_FRAME_MAXIMIZE:
+		{
+			globox_platform_set_state(
+				globox,
+				GLOBOX_STATE_MAXIMIZED); 
+
+			break;
+		}
+		case RZB_WIDGET_FRAME_CLOSE:
+		{
+			globox_set_closed(
+				globox,
+				true);
+
+			break;
+		}
+		default:
+		{
+			globox_platform_interactive_mode(
+				globox,
+				GLOBOX_INTERACTIVE_STOP);
+
+			break;
+		}
+	}
+
+	cursoryx_set(
+		cursoryx,
+		CURSORYX_ARROW);
+}
+
+void frame_dragged(struct rzb* rzb, struct rzb_widget* widget)
+{
+#if 0
+	struct rzb_widget_frame* frame = widget->data_widget;
+	enum rzb_widget_frame_status action = frame->status;
+	struct frame_data* data = frame->button_data;
+	struct globox* globox = data->globox;
+#endif
 }
 
 #if defined(WILLIS_WAYLAND)
@@ -275,7 +453,7 @@ int main(void)
 		return 1;
 	}
 
-	globox_platform_init(&globox, true, true, true);
+	globox_platform_init(&globox, true, false, true);
 
 	if (globox_error_catch(&globox))
 	{
@@ -382,9 +560,24 @@ int main(void)
 
 	char* tabs[6] = {"first", "second", "third", "fourth", "fifth", "sixth"};
 
+	struct frame_data frame_data =
+	{
+		.globox = &globox,
+		.cursoryx = &cursoryx,
+	};
+
 	widget_frame =
 		rzb_alloc_widget_frame(
-			&rzb, layout_demo_frame, &kit, "desktop sample", callback_interactive, &globox);
+			&rzb,
+			layout_demo_frame,
+			&kit,
+			"desktop sample",
+			frame_on_area,
+			frame_off_area,
+			frame_pressed,
+			frame_released,
+			frame_dragged,
+			&frame_data);
 
 	widget_handles =
 		rzb_alloc_widget_handles(
@@ -398,7 +591,7 @@ int main(void)
 
 	widget_tabs =
 		rzb_alloc_widget_tabs(
-			&rzb, layout_demo_tabs, &kit, NULL, tabs, 6, 2);
+			&rzb, layout_demo_tabs, &kit, NULL, NULL, NULL, NULL, NULL, tabs, 6, 2);
 
 	widget_popup =
 		rzb_alloc_widget_popup(
@@ -424,15 +617,15 @@ int main(void)
 
 	widget_button =
 		rzb_alloc_widget_button(
-			&rzb, layout_demo_button, &kit, NULL, NULL, NULL, false, "OK");
+			&rzb, layout_demo_button, &kit,  NULL, NULL, NULL, NULL, NULL, false, "OK");
 
 	widget_button_b =
 		rzb_alloc_widget_button(
-			&rzb, layout_demo_button_b, &kit, NULL, NULL, NULL, false, "OK");
+			&rzb, layout_demo_button_b, &kit, NULL, NULL, NULL, NULL, NULL, false, "OK");
 
 	widget_button_c =
 		rzb_alloc_widget_button(
-			&rzb, layout_demo_button_c, &kit, NULL, NULL, NULL, false, "OK");
+			&rzb, layout_demo_button_c, &kit, NULL, NULL, NULL, NULL, NULL, false, "OK");
 
 	widget_numberbox =
 		rzb_alloc_widget_numberbox(
@@ -468,9 +661,16 @@ int main(void)
 		rzb_alloc_widget_progressbar(
 			&rzb, layout_demo_progressbar, &kit, false, 66);
 
-	rzb_update_root_widget(&rzb, widget_frame);
+	if (globox_get_frameless(&globox))
+	{
+		rzb_update_root_widget(&rzb, widget_frame);
+		rzb_make_child(widget_tabs, widget_frame);
+	}
+	else
+	{
+		rzb_update_root_widget(&rzb, widget_tabs);
+	}
 
-	rzb_make_child(widget_tabs, widget_frame);
 	rzb_make_child(widget_handles, widget_tabs);
 	rzb_make_child(widget_button, widget_handles);
 	rzb_make_child(widget_button_b, widget_handles);
@@ -587,11 +787,6 @@ int main(void)
 
 	while (globox_get_closed(&globox) == false)
 	{
-		// update cursor
-		cursoryx_set(
-			&cursoryx,
-			CURSORYX_HAND);
-
 		// handle display events
 		globox_platform_events_poll(&globox);
 
