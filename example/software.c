@@ -61,6 +61,7 @@ enum rzb_default_widgets_events event_table[] =
 	[WILLIS_KEY_SHIFT_LEFT] = RZB_KEY_SHIFT_LEFT,
 	[WILLIS_KEY_SHIFT_RIGHT] = RZB_KEY_SHIFT_RIGHT,
 	[WILLIS_KEY_CTRL_LEFT] = RZB_KEY_CTRL_LEFT,
+	[WILLIS_KEY_SPACE] = RZB_KEY_SPACE,
 	[WILLIS_KEY_CTRL_RIGHT] = RZB_KEY_CTRL_RIGHT,
 	[WILLIS_KEY_DELETE] = RZB_KEY_DELETE,
 	[WILLIS_KEY_HOME] = RZB_KEY_HOME,
@@ -496,6 +497,9 @@ void event(
 		|| (event_code == WILLIS_KEY_DOWN)
 		|| (event_code == WILLIS_KEY_LEFT)
 		|| (event_code == WILLIS_KEY_RIGHT)
+		|| (event_code == WILLIS_KEY_ENTER)
+		|| (event_code == WILLIS_KEY_SPACE)
+		|| (event_code == WILLIS_KEY_BACKSPACE)
 		|| (event_code == WILLIS_MOUSE_MOTION)
 		|| (event_code == WILLIS_MOUSE_CLICK_LEFT))
 	{
@@ -740,11 +744,11 @@ int main(void)
 
 	widget_radiobutton =
 		rzb_alloc_widget_radiobutton(
-			&rzb, layout_demo_radiobutton, &kit, NULL, false);
+			&rzb, layout_demo_radiobutton, &kit, NULL, NULL, NULL, NULL, NULL, false);
 
 	widget_checkbox =
 		rzb_alloc_widget_checkbox(
-			&rzb, layout_demo_checkbox, &kit, NULL, false);
+			&rzb, layout_demo_checkbox, &kit, NULL, NULL, NULL, NULL, NULL, false);
 
 #if 0
 	widget_scrollbar =
@@ -754,7 +758,7 @@ int main(void)
 
 	widget_slider =
 		rzb_alloc_widget_slider(
-			&rzb, layout_demo_slider, &kit, NULL, false, 33);
+			&rzb, layout_demo_slider, &kit, NULL, NULL, NULL, NULL, NULL, NULL, false, 33);
 
 	widget_progressbar =
 		rzb_alloc_widget_progressbar(
