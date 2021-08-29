@@ -43,6 +43,7 @@ void layout_demo_handles(
 	struct rzb* rzb,
 	struct rzb_widget* widget)
 {
+	static bool first = true;
 	struct rzb_widget_handles* data = widget->data_widget;
 	struct rzb_default_widgets_context* context = data->context;
 
@@ -65,12 +66,27 @@ void layout_demo_handles(
 		widget->parent->height
 		- context->sizes_current->tab_default_height;
 
-	rzb_widget_layout_update(widget, x, y, width, height);
+	if (first == true)
+	{
+		data->section_lengths[0] =
+			height / 3;
+		data->section_lengths[1] =
+			height / 3;
+		data->section_lengths[2] =
+			height / 3;
+		first = false;
+	}
+	else if (height != widget->height)
+	{
+		data->section_lengths[0] =
+			height / 3;
+		data->section_lengths[1] =
+			height / 3;
+		data->section_lengths[2] =
+			height / 3;
+	}
 
-	data->section_lengths[0] =
-		widget->height / 2;
-	data->section_lengths[1] =
-		widget->height / 2;
+	rzb_widget_layout_update(widget, x, y, width, height);
 }
 
 void layout_demo_pager(

@@ -284,12 +284,95 @@ void frame_released(struct rzb* rzb, struct rzb_widget* widget)
 
 void frame_dragged(struct rzb* rzb, struct rzb_widget* widget)
 {
-#if 0
-	struct rzb_widget_frame* frame = widget->data_widget;
-	enum rzb_widget_frame_status action = frame->status;
-	struct frame_data* data = frame->button_data;
-	struct globox* globox = data->globox;
-#endif
+
+}
+
+struct handles_data
+{
+	struct globox* globox;
+	struct cursoryx* cursoryx;
+};
+
+void handles_on_area(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_handles* handles = widget->data_widget;
+	struct handles_data* data = handles->handles_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	if (handles->horizontal == true)
+	{
+		cursoryx_set(
+			cursoryx,
+			CURSORYX_SIZE_W_E);
+	}
+	else
+	{
+		cursoryx_set(
+			cursoryx,
+			CURSORYX_SIZE_N_S);
+	}
+}
+
+void handles_off_area(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_handles* handles = widget->data_widget;
+	struct handles_data* data = handles->handles_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	cursoryx_set(
+		cursoryx,
+		CURSORYX_ARROW);
+}
+
+void handles_pressed(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_handles* handles = widget->data_widget;
+	struct handles_data* data = handles->handles_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	if (handles->horizontal == true)
+	{
+		cursoryx_set(
+			cursoryx,
+			CURSORYX_SIZE_W_E);
+	}
+	else
+	{
+		cursoryx_set(
+			cursoryx,
+			CURSORYX_SIZE_N_S);
+	}
+}
+
+void handles_released(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_handles* handles = widget->data_widget;
+	struct handles_data* data = handles->handles_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	cursoryx_set(
+		cursoryx,
+		CURSORYX_ARROW);
+}
+
+void handles_dragged(struct rzb* rzb, struct rzb_widget* widget)
+{
+	struct rzb_widget_handles* handles = widget->data_widget;
+	struct handles_data* data = handles->handles_data;
+	struct cursoryx* cursoryx = data->cursoryx;
+
+	if (handles->horizontal == true)
+	{
+		cursoryx_set(
+			cursoryx,
+			CURSORYX_SIZE_W_E);
+	}
+	else
+	{
+		cursoryx_set(
+			cursoryx,
+			CURSORYX_SIZE_N_S);
+	}
 }
 
 #if defined(WILLIS_WAYLAND)
@@ -579,9 +662,25 @@ int main(void)
 			frame_dragged,
 			&frame_data);
 
+	struct handles_data handles_data =
+	{
+		.globox = &globox,
+		.cursoryx = &cursoryx,
+	};
+
 	widget_handles =
 		rzb_alloc_widget_handles(
-			&rzb, layout_demo_handles, &kit, false, 2);
+			&rzb,
+			layout_demo_handles,
+			&kit,
+			handles_on_area,
+			handles_off_area,
+			handles_pressed,
+			handles_released,
+			handles_dragged,
+			&handles_data,
+			false,
+			3);
 
 #if 0
 	widget_pager =
@@ -661,7 +760,7 @@ int main(void)
 		rzb_alloc_widget_progressbar(
 			&rzb, layout_demo_progressbar, &kit, false, 66);
 
-	if (globox_get_frameless(&globox))
+	if (true || globox_get_frameless(&globox))
 	{
 		rzb_update_root_widget(&rzb, widget_frame);
 		rzb_make_child(widget_tabs, widget_frame);
