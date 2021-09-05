@@ -540,7 +540,7 @@ int main(void)
 		return 1;
 	}
 
-	globox_platform_init(&globox, true, true, true);
+	globox_platform_init(&globox, true, false, true);
 
 	if (globox_error_catch(&globox))
 	{
@@ -764,7 +764,7 @@ int main(void)
 		rzb_alloc_widget_progressbar(
 			&rzb, layout_demo_progressbar, &kit, false, 66);
 
-	if (true || globox_get_frameless(&globox))
+	if (globox_get_frameless(&globox))
 	{
 		rzb_update_root_widget(&rzb, widget_frame);
 		rzb_make_child(widget_tabs, widget_frame);
