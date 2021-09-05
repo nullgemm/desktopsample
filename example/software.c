@@ -540,7 +540,7 @@ int main(void)
 		return 1;
 	}
 
-	globox_platform_init(&globox, true, false, true);
+	globox_platform_init(&globox, true, true, true);
 
 	if (globox_error_catch(&globox))
 	{
@@ -876,7 +876,9 @@ int main(void)
 		cursoryx_backend_link);
 
 	// main loop
+	struct rzb_display_info rzb_display_info_new = {0};
 	struct dpishit_display_info* display_info;
+	bool dpi_success = true;
 
 	globox_platform_prepoll(&globox);
 
@@ -902,13 +904,30 @@ int main(void)
 		}
 
 		// update density info
+		dpi_success = dpi_success && dpishit_refresh_scale(&dpishit);
+		// TODO why in hell does this bug everything
+		//dpi_success = dpi_success && dpishit_refresh_logic_density(&dpishit);
+		dpi_success = dpi_success && dpishit_refresh_real_density(&dpishit);
+
 		display_info = dpishit_get_display_info(&dpishit);
-		rzb_display_info.px_width = display_info->px_width;
-		rzb_display_info.px_height = display_info->px_height;
-		rzb_display_info.mm_width = display_info->mm_width;
-		rzb_display_info.mm_height = display_info->mm_height;
-		rzb_display_info.dpi_logic = display_info->dpi_logic;
-		rzb_display_info.scale = display_info->scale;
+		rzb_display_info_new.px_width = display_info->px_width;
+		rzb_display_info_new.px_height = display_info->px_height;
+		rzb_display_info_new.mm_width = display_info->mm_width;
+		rzb_display_info_new.mm_height = display_info->mm_height;
+		rzb_display_info_new.dpi_logic = display_info->dpi_logic;
+		rzb_display_info_new.scale = display_info->scale;
+
+		if (dpi_success == true)
+		{
+			dpi_success = rzb_update_display_info(&rzb, &rzb_display_info_new);
+		}
+
+		if (dpi_success == true)
+		{
+			rzb_default_widgets_density(
+				&rzb,
+				&kit);
+		}
 
 		// render
 		render(&globox, &rzb, &rzb_display_info, &event_post);
