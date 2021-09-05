@@ -49,11 +49,11 @@ void layout_demo_handles(
 
 	if (widget->parent->height <= context->sizes_current->tab_default_height)
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x;
@@ -143,11 +143,11 @@ void layout_demo_popup(
 	if (((widget->parent->width - (3 * PADDING_X) - 133) < 33)
 		|| ((data_parent->section_lengths[1] - (2 * PADDING_Y)) < 105))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -202,11 +202,11 @@ void layout_demo_button(
 	if (((widget->parent->width - (2 * PADDING_X)) < 100)
 		|| ((data_parent->section_lengths[0] - (2 * PADDING_Y)) < 100))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -231,11 +231,11 @@ void layout_demo_button_b(
 	if (((widget->parent->width - (2 * PADDING_X)) < 133)
 		|| ((data_parent->section_lengths[1] - (2 * PADDING_Y)) < 33))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -261,11 +261,11 @@ void layout_demo_button_c(
 	if (((widget->parent->width - (2 * PADDING_X)) < 133)
 		|| ((data_parent->section_lengths[1] - (3 * PADDING_Y)) / 2 < 33))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -292,11 +292,11 @@ void layout_demo_numberbox(
 	if (((widget->parent->width - (3 * PADDING_X) - 100) < 33)
 		|| ((data_parent->section_lengths[0] - (2 * PADDING_Y)) < 33))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -336,11 +336,11 @@ void layout_demo_textbox(
 	if (((widget->parent->width - (3 * PADDING_X) - 100) < 33)
 		|| ((data_parent->section_lengths[0] - (3 * PADDING_Y)) / 2 < 33))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -381,11 +381,11 @@ void layout_demo_textarea(
 	if (((widget->parent->width - (4 * PADDING_X) - 100) / 2 < 33)
 		|| ((data_parent->section_lengths[0] - (2 * PADDING_Y)) < 33))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -417,11 +417,11 @@ void layout_demo_radiobutton(
 	if (((widget->parent->width - (3 * PADDING_X) - 133) < 18)
 		|| ((data_parent->section_lengths[1] - (3 * PADDING_Y) - 105) < 18))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -449,11 +449,11 @@ void layout_demo_checkbox(
 	if (((widget->parent->width - (3 * PADDING_X) - 133) < 18)
 		|| ((data_parent->section_lengths[1] - (4 * PADDING_Y) - 105 - 18) < 18))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -488,11 +488,11 @@ void layout_demo_slider(
 	if (((widget->parent->width - (4 * PADDING_X) - 133 - 18) < 18)
 		|| ((data_parent->section_lengths[1] - (3 * PADDING_Y) - 105) < 18))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
@@ -521,11 +521,11 @@ void layout_demo_progressbar(
 	if (((widget->parent->width - (4 * PADDING_X) - 133 - 18) < 18)
 		|| ((data_parent->section_lengths[1] - (4 * PADDING_Y) - 105 - 18) < 18))
 	{
-		rzb_widget_set_hide(widget, true);
+		rzb_widget_set_hide(rzb, widget, true);
 		return;
 	}
 
-	rzb_widget_set_hide(widget, false);
+	rzb_widget_set_hide(rzb, widget, false);
 
 	int x =
 		widget->parent->x
